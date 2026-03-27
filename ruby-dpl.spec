@@ -5,23 +5,19 @@
 %define	pkgname	dpl
 Summary:	deploy tool
 Name:		ruby-%{pkgname}
-Version:	1.10.16
+Version:	2.0.5.4
 Release:	1
 License:	MIT
 Group:		Development/Languages
-Source0:	http://rubygems.org/downloads/%{pkgname}-%{version}.gem
-# Source0-md5:	d40f96347155c6472d2b83b108155321
+Source0:	https://rubygems.org/downloads/%{pkgname}-%{version}.gem
+# Source0-md5:	6823d1c35fc7c0e9195128f77d3472e0
+Patch0:		dpl-shebang.patch
 URL:		https://github.com/travis-ci/dpl
 BuildRequires:	rpm-rubyprov
-BuildRequires:	rpmbuild(macros) >= 1.656
-BuildRequires:	sed >= 4.0
+BuildRequires:	rpmbuild(macros) >= 1.665
 %if %{with tests}
-BuildRequires:	ruby-coveralls
-BuildRequires:	ruby-json = 1.8.1
 BuildRequires:	ruby-rake
-BuildRequires:	ruby-rspec < 3.1
-BuildRequires:	ruby-rspec >= 3.0.0
-BuildRequires:	ruby-rspec-its
+BuildRequires:	ruby-rspec
 %endif
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -31,11 +27,9 @@ deploy tool abstraction for clients.
 
 %prep
 %setup -q -n %{pkgname}-%{version}
-%{__sed} -i -e '1 s,#!.*ruby,#!%{__ruby},' bin/*
+%patch -P0 -p1
 
 %build
-# extract metadata to generate correct gemspec
-%{__tar} xf %{SOURCE0} metadata.gz
 # write .gemspec
 %__gem_helper spec
 
@@ -51,6 +45,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%doc CHANGELOG.md LICENSE README.md
 %attr(755,root,root) %{_bindir}/dpl
+%{ruby_vendorlibdir}/%{pkgname}.rb
 %{ruby_vendorlibdir}/%{pkgname}
 %{ruby_specdir}/%{pkgname}-%{version}.gemspec
