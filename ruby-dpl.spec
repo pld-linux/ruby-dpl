@@ -6,7 +6,7 @@
 Summary:	deploy tool
 Name:		ruby-%{pkgname}
 Version:	2.0.5.4
-Release:	2
+Release:	3
 License:	MIT
 Group:		Development/Languages
 Source0:	https://rubygems.org/downloads/%{pkgname}-%{version}.gem
